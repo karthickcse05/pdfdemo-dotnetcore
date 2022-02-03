@@ -75,7 +75,7 @@ namespace PDFDemo.Services
                 HtmlContent = htmlContent,
                 WebSettings = { DefaultEncoding = "utf-8" },
                 HeaderSettings = { FontSize = 10, Right = "Page [page] of [toPage]", Line = true },
-                FooterSettings = { FontSize = 8, Center = "PDF demo from JeminPro", Line = true },
+                FooterSettings = { FontSize = 8, Center = "PDF demo from karthickcse05", Line = true },
                 LoadSettings = new LoadSettings
                 {
                     BlockLocalFileAccess = false
