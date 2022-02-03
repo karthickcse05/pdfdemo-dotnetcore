@@ -1,5 +1,4 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-FROM surnet/alpine-wkhtmltopdf:3.8-0.12.5-full as wkhtmltopdf
 FROM mcr.microsoft.com/dotnet/aspnet:3.1 AS base
 WORKDIR /app
 EXPOSE 80
@@ -22,37 +21,15 @@ COPY --from=publish /app/publish .
 
 # <wkhtmltopdf>
 # Install dependencies for wkhtmltopdf
-RUN apk add --no-cache \
-  libstdc++ \
-  libx11 \
-  libxrender \
-  libxext \
-  libssl1.0 \
-  ca-certificates \
-  fontconfig \
-  freetype \
-  ttf-dejavu \
-  ttf-droid \
-  ttf-freefont \
-  ttf-liberation \
-  ttf-ubuntu-font-family \
-  font-noto \
-  font-adobe-100dpi 
+RUN apt-get update
 
-RUN apk add --no-cache --virtual .build-deps msttcorefonts-installer \
-  && update-ms-fonts \
-  && fc-cache -f \
-  && apk del .build-deps
+RUN apt-get install wget libgdiplus -y
 
+RUN wget -P /app/publish https://github.com/rdvojmoc/DinkToPdf/raw/master/v0.12.4/64%20bit/libwkhtmltox.dll
 
-RUN apk --no-cache --repository http://nl.alpinelinux.org/alpine/edge/testing --allow-untrusted add wqy-zenhei
+RUN wget -P /app/publish https://github.com/rdvojmoc/DinkToPdf/raw/master/v0.12.4/64%20bit/libwkhtmltox.dylib
 
-# Clean up when done
-RUN rm -rf /tmp/*
-
-# Copy wkhtmltopdf files from docker-wkhtmltopdf image
-COPY --from=wkhtmltopdf /bin/wkhtmltopdf /usr/bin/
-COPY --from=wkhtmltopdf /bin/libwkhtmltox* /usr/lib/
+RUN wget -P /app/publish https://github.com/rdvojmoc/DinkToPdf/raw/master/v0.12.4/64%20bit/libwkhtmltox.so
 
 
 ENTRYPOINT ["dotnet", "WebApplication1.dll"]
